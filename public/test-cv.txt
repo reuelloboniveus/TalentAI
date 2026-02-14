@@ -1,0 +1,43 @@
+# Implementation Plan - HireMeAI
+
+Build a web application to host on Firebase that allows users to upload a Job Description (JD) and Resume, and uses Google Gemini to analyze the match, providing a score and insights.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Gemini API Key**: The application requires a Gemini API key. For security, we will implement an input field in the UI for the user to enter their key, or use a `.env` file for local development. Hosting on Firebase with a baked-in key is not recommended for public apps without a backend proxy (e.g., Firebase Functions). For this initial version, do you prefer a client-side input or a `.env` configuration? I will proceed with a `.env` approach for now, but let me know if you want a UI input.
+
+## Proposed Changes
+
+### Frontend (React + Vite)
+-   **[NEW] `src/components/AnalyzeRequest.jsx`**: Component to handle JD and Resume input.
+-   **[NEW] `src/components/AnalyzeResult.jsx`**: Component to display analysis results (Score, Match/Miss, Insights).
+-   **[NEW] `src/services/gemini.js`**: Service to interact with Google Generative AI SDK.
+-   **[MODIFY] `src/App.jsx`**: Main application layout integrating the components.
+-   **[MODIFY] `src/index.css`**: Basic styling for a clean, modern look.
+
+### Enhancements
+-   **[NEW] `.env`**: Store `VITE_GEMINI_API_KEY`.
+-   **[MODIFY] `src/components/AnalyzeRequest.jsx`**: Remove API Key input. Add File Input for Resume.
+-   **[MODIFY] `src/index.css`**: Update styles for a more "beautiful" look (gradients, improved cards).
+-   **[NEW] `src/utils/fileParser.js`**: Utility to parse PDF and TXT files client-side using `pdfjs-dist`.
+
+### Backend / Integration
+-   **[NEW] `firebase.json`**: Firebase Hosting configuration.
+-   **[NEW] `.firebaserc`**: Firebase project alias.
+
+## Verification Plan
+
+### Automated Tests
+-   Verify the project builds successfully with `npm run build`.
+-   Run `npm run lint` to check for code quality issues.
+
+### Manual Verification
+1.  **Start Local Server**: Run `npm run dev`.
+2.  **Input Data**: Enter a sample Job Description and Resume text.
+3.  **Analyze**: Click "Analyze" and verify that Gemini returns a structured response with:
+    -   Match Score (0-100)
+    -   Matching Skills
+    -   Missing Skills
+    -   Overall Insights
+4.  **Firebase Deployment**: (If approved) Run `firebase deploy` and verify the live URL.
