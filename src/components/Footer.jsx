@@ -10,13 +10,13 @@ export default function Footer() {
                 </div>
                 <div className="footer-section">
                     <h4>Links</h4>
-                    <a href="#">Home</a>
+                    <a href="#home">Home</a>
                     <a href="#features">Features</a>
                 </div>
                 <div className="footer-section">
                     <h4>Legal</h4>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
+                    <a href="#" style={{ cursor: 'not-allowed', opacity: 0.6 }}>Privacy Policy</a>
+                    <a href="#" style={{ cursor: 'not-allowed', opacity: 0.6 }}>Terms of Service</a>
                 </div>
             </div>
             <div className="footer-bottom">

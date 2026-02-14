@@ -76,6 +76,7 @@ body {
   font-weight: 800;
   background: var(--gradient-main);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.05em;
 }
@@ -115,6 +116,7 @@ body {
 .text-gradient {
   background: var(--gradient-main);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -141,6 +143,79 @@ body {
   font-size: 0.9rem;
   font-weight: 600;
   border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+/* Live Stats */
+.live-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 1.5rem 3rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border-color);
+}
+
+/* Typing Effect Cursor */
+.typing-effect::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Container for Cards */
@@ -218,7 +293,71 @@ body {
   margin: 0;
 }
 
-/* Footer */
+/* Benefits Section */
+.benefits {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 24px;
+  margin-bottom: 2rem;
+}
+
+.benefits-header {
+  margin-bottom: 3rem;
+}
+
+.benefits h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.benefits p {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.benefit-card {
+  padding: 2rem;
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.benefit-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.benefit-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  color: var(--text-main);
+}
+
+.benefit-card p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* Footer (existing styles continue below) */
 .footer {
   border-top: 1px solid var(--border-color);
   background: rgba(15, 23, 42, 0.5);
@@ -241,6 +380,7 @@ body {
   font-weight: 700;
   background: var(--gradient-main);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -424,6 +564,7 @@ button:disabled {
   margin-top: 1rem;
   background: var(--gradient-main);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
 }
@@ -431,18 +572,21 @@ button:disabled {
 .score-display.text-green-500 {
   background: linear-gradient(135deg, #4ade80, #22c55e);
   -webkit-background-clip: text;
+  background-clip: text;
   filter: drop-shadow(0 0 20px rgba(74, 222, 128, 0.3));
 }
 
 .score-display.text-yellow-500 {
   background: linear-gradient(135deg, #facc15, #eab308);
   -webkit-background-clip: text;
+  background-clip: text;
   filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.3));
 }
 
 .score-display.text-red-500 {
   background: linear-gradient(135deg, #f87171, #ef4444);
   -webkit-background-clip: text;
+  background-clip: text;
   filter: drop-shadow(0 0 20px rgba(248, 113, 113, 0.3));
 }
 
