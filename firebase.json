@@ -12,5 +12,17 @@
                 "destination": "/index.html"
             }
         ]
-    }
+    },
+    "firestore": [
+        {
+            "database": "(default)",
+            "rules": "firestore.rules",
+            "indexes": "firestore.indexes.json"
+        },
+        {
+            "database": "hr-saas-db-prod",
+            "rules": "firestore.rules",
+            "indexes": "firestore.indexes.json"
+        }
+    ]
 }

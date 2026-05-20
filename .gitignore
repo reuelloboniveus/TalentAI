@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase and Coverage
+.firebase/
+coverage/
+dist/
+node_modules/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+
