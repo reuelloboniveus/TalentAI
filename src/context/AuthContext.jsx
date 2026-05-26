@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db, googleProvider } from '../services/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp, collection, getDocs } from 'firebase/firestore';
+import { logEvent } from '../services/logger';
 
 const AuthContext = createContext();
 
@@ -18,15 +19,19 @@ export function AuthProvider({ children }) {
     const login = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
+            await logEvent('AUTH_LOGIN', `User signed in successfully`, { email: result.user.email });
             return result.user;
         } catch (error) {
             console.error("Login failed:", error);
+            await logEvent('AUTH_LOGIN_ERROR', `User sign in failed: ${error.message}`);
             throw error;
         }
     };
 
     // Logout
     const logout = () => {
+        const email = currentUser?.email || 'unknown';
+        logEvent('AUTH_LOGOUT', `User signed out`, { email });
         return signOut(auth);
     };
 
@@ -54,6 +59,7 @@ export function AuthProvider({ children }) {
             dailyUsage: increment(amount)
         });
         setUserData(prev => ({ ...prev, dailyUsage: (prev?.dailyUsage || 0) + amount }));
+        await logEvent('CREDIT_DEDUCTION', `Deducted ${amount} protocol credits`, { amount, currentUsage: (userData?.dailyUsage || 0) + amount });
         return true;
     };
 
@@ -74,6 +80,7 @@ export function AuthProvider({ children }) {
         };
 
         await setDoc(orgRef, newOrg);
+        await logEvent('ADMIN_CREATE_ORG', `Created organization: ${orgName}`, { orgId: orgRef.id, name: orgName });
         return orgRef.id;
     };
 
@@ -89,6 +96,7 @@ export function AuthProvider({ children }) {
             limit: 10,
             lastReset: serverTimestamp()
         }, { merge: true });
+        await logEvent('ADMIN_ASSIGN_USER', `Assigned user ${targetUserId} to organization ${targetOrgId}`, { targetUserId, targetOrgId, role });
     };
 
     // Super Admin: Remove User from Org
@@ -96,6 +104,7 @@ export function AuthProvider({ children }) {
         if (userData?.role !== 'super_admin') throw new Error("Unauthorized");
         const userRef = doc(db, 'users', targetUserId);
         await updateDoc(userRef, { orgId: null }); // Or use deleteField() if imported
+        await logEvent('ADMIN_REMOVE_USER', `Removed user ${targetUserId} from organization`, { targetUserId });
     };
 
     // Update Organization Settings (API Key)
@@ -106,6 +115,7 @@ export function AuthProvider({ children }) {
             geminiApiKey: apiKey
         });
         setOrgData(prev => ({ ...prev, geminiApiKey: apiKey }));
+        await logEvent('ORG_UPDATE_API_KEY', `Updated API key for organization`, { orgId: userData.orgId });
     };
 
     // Super Admin: Fetch All Orgs
@@ -120,6 +130,7 @@ export function AuthProvider({ children }) {
         if (userData?.role !== 'super_admin') throw new Error("Unauthorized");
         const orgRef = doc(db, 'organizations', orgId);
         await updateDoc(orgRef, { geminiApiKey: apiKey });
+        await logEvent('ADMIN_UPDATE_ORG_API_KEY', `Super Admin updated API key for organization ${orgId}`, { orgId });
     };
 
     useEffect(() => {

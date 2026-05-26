@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { parseFile } from '../utils/fileParser';
 import { generateQuestions } from '../services/gemini_questions';
+import { logEvent } from '../services/logger';
 
 export default function QuestionsGenerator({ onCreditDeduct }) {
     const [jobRole, setJobRole] = useState('');
@@ -55,8 +56,10 @@ export default function QuestionsGenerator({ onCreditDeduct }) {
 
             const data = await generateQuestions(resumeText, jobRole);
             setQuestionsData(data);
+            await logEvent('GENERATE_QUESTIONS', `Generated L1 screening questions`, { jobRole, candidateName: data.candidate_name });
         } catch (error) {
             alert(error.message || "An error occurred while generating questions.");
+            await logEvent('GENERATE_QUESTIONS_ERROR', `Failed L1 questions generation: ${error.message || error}`, { jobRole });
         } finally {
             setLoading(false);
         }

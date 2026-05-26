@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SideNavBar from './components/SideNavBar';
 import TopHeader from './components/TopHeader';
+import { logEvent } from './services/logger';
 import Hero from './components/Hero';
 import Benefits from './components/Benefits';
 import Features from './components/Features';
@@ -91,6 +92,7 @@ function App() {
       loadHistory();
 
       setResult(analysis);
+      await logEvent('ANALYZE_RESUME', `Successfully executed resume analysis (${mode} mode)`, { mode, cost, count: mode === 'bulk' ? resumeOrResumes.length : 1 });
       // Smooth scroll to result
       setTimeout(() => {
         const resultElement = document.getElementById('analysis-result');
@@ -98,6 +100,7 @@ function App() {
       }, 100);
     } catch (err) {
       setError(err.message || "An error occurred during analysis.");
+      await logEvent('ANALYZE_RESUME_ERROR', `Failed resume analysis: ${err.message || err}`, { mode, cost });
     } finally {
       setLoading(false);
     }

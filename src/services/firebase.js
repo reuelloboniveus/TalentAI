@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { logEvent } from './logger';
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -83,9 +84,11 @@ export const saveJD = async (userId, title, content, orgId = null) => {
             createdAt: Timestamp.now(),
             createdBy: userId
         });
+        await logEvent('CREATE_JD_TEMPLATE', `Created Job Description template: ${title}`, { jdId: docRef.id, title, orgId });
         return { id: docRef.id, title, content };
     } catch (error) {
         console.error("Error saving JD:", error);
+        await logEvent('CREATE_JD_TEMPLATE_ERROR', `Failed to create JD template: ${error.message}`, { title, orgId });
         throw error;
     }
 };
@@ -111,8 +114,10 @@ export const deleteJD = async (userId, jdId, orgId = null) => {
             ? doc(db, 'organizations', orgId, 'jds', jdId) 
             : doc(db, 'users', userId, 'jds', jdId);
         await deleteDoc(jdRef);
+        await logEvent('DELETE_JD_TEMPLATE', `Deleted Job Description template`, { jdId, orgId });
     } catch (error) {
         console.error("Error deleting JD:", error);
+        await logEvent('DELETE_JD_TEMPLATE_ERROR', `Failed to delete JD template: ${error.message}`, { jdId, orgId });
         throw error;
     }
 };
@@ -129,8 +134,10 @@ export const updateJD = async (userId, jdId, title, content, orgId = null) => {
             updatedAt: Timestamp.now(),
             updatedBy: userId
         });
+        await logEvent('UPDATE_JD_TEMPLATE', `Updated Job Description template: ${title}`, { jdId, title, orgId });
     } catch (error) {
         console.error("Error updating JD:", error);
+        await logEvent('UPDATE_JD_TEMPLATE_ERROR', `Failed to update JD template: ${error.message}`, { jdId, title, orgId });
         throw error;
     }
 };

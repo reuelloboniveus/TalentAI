@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { generateJobPostImageRest } from '../services/nanobanana';
+import { logEvent } from '../services/logger';
 
 export default function JobPostGenerator({ onCreditDeduct }) {
     const [jobData, setJobData] = useState({
@@ -39,9 +40,11 @@ export default function JobPostGenerator({ onCreditDeduct }) {
 
             const imageData = await generateJobPostImageRest(prompt);
             setGeneratedImage(imageData);
+            await logEvent('GENERATE_MARKETING_VISUAL', `Generated marketing visual for job post`, { title: jobData.title, company: jobData.company });
         } catch (err) {
             console.error("Image generation failed:", err);
             setError(err.message || "Failed to generate image. Please try again.");
+            await logEvent('GENERATE_MARKETING_VISUAL_ERROR', `Failed marketing visual generation: ${err.message || err}`, { title: jobData.title, company: jobData.company });
         } finally {
             setIsGenerating(false);
         }
