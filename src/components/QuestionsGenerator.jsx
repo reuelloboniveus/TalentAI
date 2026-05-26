@@ -87,8 +87,8 @@ export default function QuestionsGenerator({ onCreditDeduct }) {
         <div className="max-w-[1600px] mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Header */}
             <div className="space-y-2">
-                <h2 className="text-4xl lg:text-5xl font-black text-primary dark:text-white tracking-tight">Q&A Studio</h2>
-                <p className="text-on-surface-variant dark:text-slate-300 text-lg font-medium opacity-70">Generate tailored, interview-ready screening questions directly from a candidate's resume.</p>
+                <h2 className="text-4xl lg:text-5xl font-black text-primary tracking-tight">Q&A Studio</h2>
+                <p className="text-on-surface-variant text-lg font-medium opacity-70">Generate tailored, interview-ready screening questions directly from a candidate's resume.</p>
             </div>
 
             {!questionsData ? (
