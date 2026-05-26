@@ -18,6 +18,7 @@ export default function SideNavBar({ currentHash, history = [], onHistorySelect,
         { label: 'Analyzer', icon: 'analytics', href: '#analyze', active: currentHash === '#analyze' },
         { label: 'JD Library', icon: 'inventory_2', href: '#jds', active: currentHash === '#jds' },
         { label: 'Job Generator', icon: 'magic_button', href: '#generator', active: currentHash === '#generator' },
+        { label: 'Q&A Studio', icon: 'question_answer', href: '#questions', active: currentHash === '#questions' },
     ];
 
     if (userData?.role === 'admin' || userData?.role === 'super_admin') {

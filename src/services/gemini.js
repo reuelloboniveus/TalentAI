@@ -1,4 +1,4 @@
-const CLOUD_RUN_URL = "https://resume-analyzer-service-396523767033.asia-south1.run.app";
+const CLOUD_RUN_URL = import.meta.env.VITE_RESUME_SERVICE_URL || "https://resume-analyzer-service-396523767033.asia-south1.run.app";
 
 export async function analyzeMatch(jdText, resumeText) {
     try {

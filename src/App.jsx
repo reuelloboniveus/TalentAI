@@ -13,6 +13,7 @@ import { useAuth } from './context/AuthContext';
 import { saveAnalysisToHistory, getUserHistory, saveJD, getUserJDs } from './services/firebase';
 import JobPostGenerator from './components/JobPostGenerator';
 import JDLibrary from './components/JDLibrary';
+import QuestionsGenerator from './components/QuestionsGenerator';
 import SignIn from './components/SignIn';
 import './App.css';
 
@@ -145,11 +146,13 @@ function App() {
   const isAdminView = currentHash === '#admin';
   const isGeneratorView = currentHash === '#generator';
   const isLibraryView = currentHash === '#jds';
+  const isQuestionsView = currentHash === '#questions';
 
   const getPageTitle = () => {
     if (isAdminView) return "Governance Control";
     if (isGeneratorView) return "AI Studio";
     if (isLibraryView) return "JD Library";
+    if (isQuestionsView) return "Q&A Studio";
     if (result) return "Analysis Report";
     return "Mission Control";
   };
@@ -237,6 +240,18 @@ function App() {
              <JDLibrary jds={savedJDs} onUpdate={loadJDs} />
           ) : isGeneratorView ? (
              <JobPostGenerator
+                onCreditDeduct={async (cost) => {
+                  const isAdmin = userData?.role === 'admin' || userData?.role === 'super_admin';
+                  if (!isAdmin && userData && (userData.dailyUsage + cost) > userData.limit) {
+                    alert(`Action denied. Insufficient protocol credits (${userData.limit - userData.dailyUsage} remaining).`);
+                    return false;
+                  }
+                  await incrementUsage(cost);
+                  return true;
+                }}
+             />
+          ) : isQuestionsView ? (
+             <QuestionsGenerator
                 onCreditDeduct={async (cost) => {
                   const isAdmin = userData?.role === 'admin' || userData?.role === 'super_admin';
                   if (!isAdmin && userData && (userData.dailyUsage + cost) > userData.limit) {
