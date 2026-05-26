@@ -80,10 +80,12 @@ export default function AnalyzeRequest({ onAnalyze, savedJDs = [], onSaveJD }) {
             if (jd && bulkFiles.length > 0) {
                 setIsParsing(true);
                 try {
-                    const resumes = await Promise.all(bulkFiles.map(async (item) => {
+                    // Process files sequentially to avoid overloading the worker/memory
+                    const resumes = [];
+                    for (const item of bulkFiles) {
                         const text = await parseFile(item.file);
-                        return { name: item.name, text };
-                    }));
+                        resumes.push({ name: item.name, text });
+                    }
                     onAnalyze(jd, resumes, 'bulk');
                 } catch (error) {
                     alert("Error parsing some files: " + error.message);

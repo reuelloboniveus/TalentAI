@@ -1,52 +1,6 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
-// Suppress distracting console warnings from pdfjs-dist in the main thread
-if (typeof window !== 'undefined' || typeof globalThis !== 'undefined') {
-    const target = typeof window !== 'undefined' ? window : globalThis;
-    if (target.console && target.console.warn) {
-        const originalWarn = target.console.warn;
-        target.console.warn = function (...args) {
-            if (args[0] && typeof args[0] === 'string' && (args[0].includes('Warning: TT:') || args[0].includes('TT: undefined function'))) {
-                return;
-            }
-            originalWarn.apply(target.console, args);
-        };
-    }
-
-    // Intercept Worker creations to suppress warnings inside the PDF.js Web Worker context
-    if (typeof target.Worker !== 'undefined' && typeof Blob !== 'undefined' && typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function') {
-        const OriginalWorker = target.Worker;
-        target.Worker = class PatchedWorker extends OriginalWorker {
-            constructor(scriptURL, options) {
-                const urlStr = String(scriptURL);
-                if (urlStr.includes('pdf.worker')) {
-                    const resolvedURL = new URL(scriptURL, target.location.href).href;
-                    const blobCode = `
-                        const originalWarn = self.console.warn;
-                        self.console.warn = function(...args) {
-                            if (args[0] && typeof args[0] === 'string' && (args[0].includes('Warning: TT:') || args[0].includes('TT: undefined function'))) {
-                                return;
-                            }
-                            originalWarn.apply(self.console, args);
-                        };
-                        try {
-                            importScripts(${JSON.stringify(resolvedURL)});
-                        } catch (e) {
-                            import(${JSON.stringify(resolvedURL)});
-                        }
-                    `;
-                    const blob = new Blob([blobCode], { type: 'application/javascript' });
-                    const newURL = URL.createObjectURL(blob);
-                    super(newURL, options);
-                } else {
-                    super(scriptURL, options);
-                }
-            }
-        };
-    }
-}
-
 // Set worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
