@@ -26,14 +26,14 @@ export default function SideNavBar({ currentHash, history = [], onHistorySelect,
     }
 
     return (
-        <aside className={`h-screen w-64 fixed left-0 top-0 bg-white dark:bg-[#041627] flex flex-col py-6 px-4 font-headline tracking-tight border-r border-outline-variant/10 z-[70] transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <aside className={`h-screen w-64 fixed left-0 top-0 bg-white flex flex-col py-6 px-4 font-headline tracking-tight border-r border-slate-100 z-[70] transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             <div className="mb-10 px-2 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-xl">
                         <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1" }}>analytics</span>
                     </div>
                     <div>
-                        <h1 className="text-xl font-black text-primary dark:text-white leading-none">TalentAI</h1>
+                        <h1 className="text-xl font-black text-primary leading-none">TalentAI</h1>
                         <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mt-1">Precision Curator</p>
                     </div>
                 </div>
